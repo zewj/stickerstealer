@@ -1,0 +1,8 @@
+{
+  "name": "StickerStealer",
+  "version": "1.0.0",
+  "description": "Steal stickers on mobile with ease.",
+  "author": "zewj (inspired by Stealmoji)",
+  "license": "GPL-3.0",
+  "main": "index.js"
+}
