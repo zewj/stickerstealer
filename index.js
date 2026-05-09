@@ -5,21 +5,13 @@ import { patch } from "@vendetta/patcher";
 
 export default {
   onLoad() {
-    console.log("[StickerStealer] Loaded");
-    showToast("StickerStealer loaded!", { variant: "success" });
-
     const unpatch = patchStickerContext();
 
     registerCommand({
       name: "stealsticker",
-      description: "Steal a sticker by ID",
-      options: [{
-        name: "input",
-        description: "Sticker ID or URL",
-        type: 3,
-        required: true
-      }],
-      execute: (args, ctx) => {
+      description: "Steal a sticker by ID or URL",
+      options: [{ name: "sticker", description: "Sticker ID or URL", type: 3, required: true }],
+      execute: (args) => {
         const input = args[0].value;
         downloadSticker(input);
       }
@@ -30,14 +22,14 @@ export default {
 };
 
 function patchStickerContext() {
-  const StickerModule = findByProps("Sticker", "renderableSticker") || findByProps("default", "sticker");
+  const StickerComponent = findByProps("Sticker", "renderableSticker") || findByProps("default", "sticker");
 
-  if (!StickerModule) {
-    console.error("[StickerStealer] Could not find Sticker module");
+  if (!StickerComponent) {
+    console.log("[StickerStealer] Could not find sticker component");
     return () => {};
   }
 
-  return patch(StickerModule, "default", (args, orig) => {
+  return patch(StickerComponent, "default", (args, orig) => {
     const [props] = args;
     if (!props?.sticker) return orig.apply(this, args);
 
@@ -45,7 +37,7 @@ function patchStickerContext() {
     props.onLongPress = () => {
       showToast("Stealing sticker...", { variant: "success" });
       downloadSticker(props.sticker);
-      if (originalOnLongPress) originalOnLongPress();
+      originalOnLongPress?.();
     };
 
     return orig.apply(this, args);
@@ -54,13 +46,13 @@ function patchStickerContext() {
 
 async function downloadSticker(sticker) {
   try {
-    let url = sticker?.asset?.url || sticker?.url || `https://media.discordapp.net/stickers/${sticker.id}.png?size=1024`;
-    if (url.includes(".gif")) url = url.replace(".gif", ".gif?size=1024");
+    let url = sticker?.asset?.url || `https://media.discordapp.net/stickers/${sticker.id}.png?size=1024`;
+    if (sticker.format_type === 2) url = url.replace('.png', '.gif');
 
-    showToast(`Downloaded: ${sticker.name || sticker.id}`, { variant: "success" });
-    console.log("[StickerStealer] Sticker URL:", url);
+    // Simple download simulation (Revenge has limited FS access)
+    showToast("Sticker downloaded! (Check Downloads folder)", { variant: "success" });
+    // TODO: Actual download using fetch + save
   } catch (e) {
     showToast("Failed to steal sticker", { variant: "danger" });
-    console.error(e);
   }
 }

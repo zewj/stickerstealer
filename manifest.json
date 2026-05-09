@@ -1,7 +1,7 @@
 {
   "name": "StickerStealer",
   "version": "1.0.0",
-  "description": "Steal stickers on mobile with ease. Long-press any sticker to download it.",
+  "description": "Steal stickers on mobile with ease.",
   "author": "zewj",
   "license": "GPL-3.0",
   "main": "index.js"
