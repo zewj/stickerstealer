@@ -1,8 +1,13 @@
 {
   "name": "StickerStealer",
-  "version": "1.0.0",
   "description": "Steal stickers on mobile with ease.",
-  "author": "zewj",
-  "license": "GPL-3.0",
-  "main": "index.js"
+  "authors": [
+    {
+      "name": "zewj"
+    }
+  ],
+  "main": "index.js",
+  "vendetta": {
+    "icon": "ic_sticker"
+  }
 }
